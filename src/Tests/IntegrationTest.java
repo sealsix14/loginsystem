@@ -1,0 +1,106 @@
+package Tests;
+
+import static org.junit.Assert.*;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import Account.Account;
+import Account.AccountTable;
+import User.LoginManager;
+import User.User;
+import User.UserPreferences;
+
+public class IntegrationTest extends TestCase{
+
+	Account account;
+	AccountTable table;
+	User user;
+	LoginManager manager;
+	
+	@Before
+	public void setUp() throws Exception 
+	{
+		account = new Account("Brandon", "bj01415");
+		account.setEmail("bj01415@georgiasouthern.edu");
+		table = new AccountTable();
+		user = new User(account);
+		UserPreferences up = new UserPreferences();
+		
+		user.getPreferences().setContactStatus(false);
+		user.getPreferences().setPreferredName("BDawg");
+		manager = new LoginManager();
+		table.addAccount(account);
+		manager.setAccountTable(table);
+		
+	}
+	@After
+	public void tearDown() throws Exception {
+	}
+
+	public void testRegistration()
+	{
+		System.out.println("User Registered as:");
+		System.out.println("Username: " + account.getUsername());
+		System.out.println("Password: " + account.getPassword());
+		System.out.println("Email: " + account.getEmail());
+		System.out.println("Date Created: " + account.getDateCreated());
+		System.out.println("User Preference for contact: " + user.getPreferences().canContact());
+		System.out.println("User Preference for name: " + user.getPreferences().getPreferredName());
+	}
+	
+	public void testcheckUserInSystem()
+	{
+		System.out.println("\n\n");
+		System.out.println("User username: " + user.getUserUsername());
+		System.out.println("User Password: " + user.getUserPassword());
+		System.out.println("User email: " + user.getAccount().getEmail());
+		System.out.println("User account" + user.getAccount().toString() + " is the same as the account, " + account.toString());
+		assertTrue(manager.checkAccount(account));
+	}
+	
+	public void testUserLogsIn()
+	{
+		System.out.println("Users First Login: " + user.IsFirstLogin());
+		System.out.println("User is Logged In: " + user.IsLoggedIn());
+		System.out.println("User Logging In");
+		manager.userLogsIn(user);
+		System.out.println("User is Logged In: " + user.IsLoggedIn());
+		manager.userLogsOut(user);
+		System.out.println("User Logging Out");
+		System.out.println("User is Logged In: " + user.IsLoggedIn());
+		manager.userLogsIn(user);
+		System.out.println("User Loggin In Again");
+		System.out.println("Users First Login: "+ user.IsFirstLogin());
+	}
+	
+	public void testEditPreferences()
+	{
+		UserPreferences tmp = user.getPreferences();
+		System.out.println("Users TimeZone is: " + tmp.getTimeZone());
+		tmp.setTimeZone(UserPreferences.TimeZone.Central);
+		System.out.println("Users TimeZone is now: " + tmp.getTimeZone());
+		System.out.println("Users contact method is: " + tmp.getPreferredContact());
+		tmp.setPreferredContact(UserPreferences.PreferedContact.Phone);
+		System.out.println("Users Contact method is now: " + tmp.getPreferredContact());
+		System.out.println("User can be contacted : " + tmp.canContact());
+		tmp.setContactStatus(false);
+		System.out.println("User can be contacted : " + tmp.canContact());
+	}
+	
+	public void testDeletion()
+	{
+		System.out.println("Accounts in table: " + table.getAccounts().size());
+		table.removeAccount(account);
+		System.out.println("Accounts in table after deletion: " + table.getAccounts().size());
+	}
+	
+	@Test
+	public static TestSuite suite() {
+		return new TestSuite(IntegrationTest.class);
+	}
+
+}
