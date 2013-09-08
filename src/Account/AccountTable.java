@@ -1,7 +1,7 @@
 package Account;
 
 import java.util.*;
-
+//TODO: Update accounts to a HashTable, we can do lookups by email in O(N) time by matching the key to the account value.
 public class AccountTable {
 	private ArrayList<Account> accounts;
 	private int accountIndex;
