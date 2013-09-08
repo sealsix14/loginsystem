@@ -17,7 +17,7 @@ public class Account {
 	private String reminderWord;
 	private String emailAddress;
 	private String userName;
-	private boolean accountValidated = false;
+	private boolean accountValidated;
 	private String dateCreated;
 	private StringBuilder sb = new StringBuilder();
 
@@ -33,6 +33,7 @@ public class Account {
 		//accountUser = new User();
 		userName = user;
 		password = pw;
+		accountValidated = false;
 		//accountUser.setName(userName);
 		//accountUser.setPassword(password);
 		buildDateString();
@@ -149,10 +150,7 @@ public class Account {
 	
 	public boolean userIsValidated(String uname, String pw)
 	{
-		boolean isRight=false;
-		if(uname.matches(userName) && pw.matches(password))
-			isRight=true;
-		return isRight;
+		return uname.matches(userName) && pw.matches(password);
 	}
 	
 	public boolean accountValidated()
